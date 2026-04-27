@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ujjwal Singh — SDE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --white: #ffffff;
+      --off-white: #f7f6f3;
+      --light: #f0ede8;
+      --border: #e8e4de;
+      --border-dark: #d0cbc3;
+      --text: #111111;
+      --text-mid: #555555;
+      --text-muted: #999999;
+      --accent: #111111;
+      --accent-alt: #c8b89a;
+      --sidebar-w: 280px;
+      --sans: 'DM Sans', system-ui, sans-serif;
+      --display: 'Space Grotesk', system-ui, sans-serif;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--white);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    /* ── Custom Scrollbar ── */
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--off-white); }
+    ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 2px; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      padding: 48px 40px;
+      background: var(--white);
+      z-index: 10;
+    }
+
+    .sidebar-logo {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 56px;
+    }
+
+    .sidebar-logo span {
+      display: block;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: var(--off-white);
+      color: var(--text);
+    }
+
+    .nav-item.active { font-weight: 500; }
+
+    .nav-num {
+      font-size: 10px;
+      color: var(--border-dark);
+      font-family: var(--display);
+      width: 18px;
+      text-align: right;
+      transition: color 0.25s;
+    }
+
+    .nav-item.active .nav-num,
+    .nav-item:hover .nav-num { color: var(--accent-alt); }
+
+    .nav-dot {
+      position: absolute;
+      left: -40px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .nav-item.active .nav-dot { opacity: 1; }
+
+    .sidebar-footer {
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .sidebar-link:hover { color: var(--text); }
+
+    .sidebar-link svg { flex-shrink: 0; }
+
+    .availability {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .dot-live {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px #22c55e22;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px #22c55e22; }
+      50% { box-shadow: 0 0 0 6px #22c55e11; }
+    }
+
+    /* ── Main Content ── */
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ── Sections ── */
+    .section {
+      min-height: 100vh;
+      padding: 80px 72px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    /* Section label */
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+
+    .eyebrow-num {
+      font-family: var(--display);
+      font-size: 11px;
+      color: var(--accent-alt);
+      letter-spacing: 0.1em;
+    }
+
+    .eyebrow-line {
+      width: 40px;
+      height: 1px;
+      background: var(--border-dark);
+    }
+
+    .eyebrow-text {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ── */
+    #home {
+      padding-top: 120px;
+      padding-bottom: 80px;
+      justify-content: flex-start;
+    }
+
+    .hero-greeting {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+      font-weight: 300;
+    }
+
+    .hero-name {
+      font-family: var(--display);
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      margin-bottom: 32px;
+      padding-bottom: 6px;
+      overflow: visible;
+    }
+
+    .hero-name .line {
+      display: block;
+      transform: translateY(110%);
+      animation: slideUp 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+    }
+
+    .hero-name .line:nth-child(2) { animation-delay: 0.1s; }
+
+    @keyframes slideUp {
+      to { transform: translateY(0); }
+    }
+
+    .hero-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .hero-desc {
+      max-width: 520px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-mid);
+      font-weight: 300;
+      margin-bottom: 52px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      padding-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--display);
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      font-weight: 300;
+    }
+
+    /* ── About ── */
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-big-text {
+      font-family: var(--display);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 500;
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .about-body {
+      font-size: 15px;
+      line-height: 1.9;
+      color: var(--text-mid);
+      font-weight: 300;
+      margin-bottom: 20px;
+    }
+
+    .about-right { padding-top: 8px; }
+
+    .about-tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+
+    .about-tag {
+      font-size: 12px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-mid);
+      font-weight: 300;
+      transition: all 0.2s;
+    }
+
+    .about-tag:hover { border-color: var(--text); color: var(--text); }
+
+    /* ── Experience ── */
+    .exp-list { display: flex; flex-direction: column; }
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 40px;
+      padding: 36px 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      transition: background 0.3s;
+    }
+
+    .exp-item:first-child { border-top: 1px solid var(--border); }
+
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--off-white);
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 4px;
+      z-index: -1;
+    }
+
+    .exp-item:hover::before { opacity: 1; }
+
+    .exp-meta { padding-top: 4px; }
+
+    .exp-period {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .exp-type {
+      font-size: 11px;
+      color: var(--accent-alt);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .exp-role {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .exp-company {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      font-weight: 300;
+    }
+
+    .exp-desc {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-mid);
+      font-weight: 300;
+      max-width: 500px;
+    }
+
+    /* ── Projects ── */
+    .projects-list { display: flex; flex-direction: column; gap: 2px; }
+
+    .project-item {
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      align-items: start;
+      gap: 24px;
+      padding: 28px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.25s;
+      cursor: pointer;
+    }
+
+    .project-item:hover { background: var(--off-white); }
+
+    .project-num {
+      font-family: var(--display);
+      font-size: 12px;
+      color: var(--border-dark);
+      padding-top: 4px;
+      font-weight: 500;
+    }
+
+    .project-body { min-width: 0; }
+
+    .project-name {
+      font-family: var(--display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+      transition: letter-spacing 0.3s ease;
+    }
+
+    .project-item:hover .project-name { letter-spacing: -0.01em; }
+
+    .project-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      font-weight: 300;
+      max-width: 520px;
+      margin-bottom: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .ptag {
+      font-size: 11px;
+      padding: 3px 10px;
+      background: var(--light);
+      border-radius: 100px;
+      color: var(--text-mid);
+      font-weight: 300;
+    }
+
+    .project-right { padding-top: 4px; text-align: right; }
+
+    .project-status {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .status-live {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1px solid #bbf7d0;
+    }
+
+    .status-dev {
+      background: #fffbeb;
+      color: #d97706;
+      border: 1px solid #fde68a;
+    }
+
+    .project-arrow {
+      display: block;
+      margin-top: 12px;
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: transform 0.25s, color 0.25s;
+    }
+
+    .project-item:hover .project-arrow {
+      transform: translate(3px, -3px);
+      color: var(--text);
+    }
+
+    /* ── Skills ── */
+    .skills-section { padding-bottom: 60px; }
+
+    .skills-group {
+      margin-bottom: 36px;
+    }
+
+    .skills-group-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+
+    .skills-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill {
+      font-size: 13px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-mid);
+      font-weight: 300;
+      transition: all 0.2s;
+      background: var(--white);
+    }
+
+    .skill:hover {
+      background: var(--text);
+      color: var(--white);
+      border-color: var(--text);
+    }
+
+    /* ── Contact ── */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-big {
+      font-family: var(--display);
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .contact-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 36px;
+    }
+
+    .contact-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--text);
+      color: var(--white);
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .contact-cta:hover {
+      background: #333;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+
+    .contact-links-col {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-top: 8px;
+    }
+
+    .contact-link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .contact-link-row:first-child { border-top: 1px solid var(--border); }
+    .contact-link-row:hover .contact-link-label { letter-spacing: 0.02em; }
+
+    .contact-link-label {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 500;
+      transition: letter-spacing 0.3s;
+    }
+
+    .contact-link-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .contact-arrow {
+      font-size: 18px;
+      transition: transform 0.25s;
+    }
+
+    .contact-link-row:hover .contact-arrow { transform: translate(3px, -3px); }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 28px 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    .footer-left {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .footer-right {
+      font-family: var(--display);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Scroll Stretch Effect ── */
+    .stretch-img-wrap {
+      overflow: hidden;
+      border-radius: 12px;
+      will-change: transform;
+    }
+
+    /* ── Section title shared ── */
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(32px, 4.5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      font-weight: 300;
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 52px;
+    }
+
+    /* ── Scroll-reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s cubic-bezier(0.76, 0, 0.24, 1),
+                  transform 0.75s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── Stretch on scroll ── */
+    .stretch-block {
+      overflow: hidden;
+    }
+
+    .stretch-inner {
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+
+    /* ── Horizontal marquee ── */
+    .marquee-wrap {
+      overflow: hidden;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 64px;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 48px;
+      width: max-content;
+      animation: marquee 22s linear infinite;
+    }
+
+    .marquee-item {
+      font-family: var(--display);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .marquee-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--accent-alt);
+      display: inline-block;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+      .section {
+        padding: 60px 32px;
+      }
+      .about-layout,
+      .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+      .exp-item { grid-template-columns: 1fr; gap: 8px; }
+      .footer { padding: 24px 32px; flex-direction: column; gap: 8px; text-align: center; }
+      .hero-stats { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      Ujjwal Singh
+      <span>Software Engineer</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" href="#home" data-section="home">
+        <span class="nav-dot"></span>
+        <span class="nav-num">01</span>
+        Home
+      </a>
+      <a class="nav-item" href="#about" data-section="about">
+        <span class="nav-dot"></span>
+        <span class="nav-num">02</span>
+        About
+      </a>
+      <a class="nav-item" href="#experience" data-section="experience">
+        <span class="nav-dot"></span>
+        <span class="nav-num">03</span>
+        Experience
+      </a>
+      <a class="nav-item" href="#projects" data-section="projects">
+        <span class="nav-dot"></span>
+        <span class="nav-num">04</span>
+        Projects
+      </a>
+      <a class="nav-item" href="#contact" data-section="contact">
+        <span class="nav-dot"></span>
+        <span class="nav-num">05</span>
+        Contact
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="availability">
+        <span class="dot-live"></span>
+        Open to opportunities
+      </div>
+      <div class="sidebar-links">
+        <a href="https://github.com/ujjwal1629" target="_blank" rel="noopener" class="sidebar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          github/ujjwal1629
+        </a>
+        <a href="https://www.linkedin.com/in/ujjwal-singh-71b908278/" target="_blank" rel="noopener" class="sidebar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          linkedin/ujjwal-singh
+        </a>
+        <a href="mailto:ujjwalsingh1629@gmail.com" class="sidebar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          ujjwalsingh1629@gmail.com
+        </a>
+        <a href="tel:+919871462694" class="sidebar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l.9-.89a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +91 98714 62694
+        </a>
+        <a href="Ujjwal_Singh_Resume%20(1).pdf" download="Ujjwal_Singh_Resume.pdf" class="sidebar-link" style="margin-top:8px; padding:8px 12px; border:1px solid var(--border); border-radius:6px; justify-content:center; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; font-weight:500;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Resume
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main" id="main-scroll">
+
+    <!-- Hero -->
+    <section class="section" id="home" style="min-height:100vh; padding-top: 100px;">
+      <p class="hero-greeting">Hello, I'm</p>
+      <h1 class="hero-name">
+        <span class="line">Ujjwal</span>
+        <span class="line">Singh.</span>
+      </h1>
+      <div class="hero-role">
+        <span style="width:6px;height:6px;border-radius:50%;background:#c8b89a;display:inline-block;"></span>
+        Software Development Engineer
+      </div>
+      <p class="hero-desc">
+        I build products that cut through complexity — from AI-powered dev tools
+        to mobile apps used by real people. 2+ years across startups and enterprise.
+        Currently founding <strong style="color:#111;font-weight:500;">Qodebench</strong>.
+      </p>
+
+      <div class="hero-stats">
+        <div class="reveal reveal-delay-1">
+          <div class="stat-num">2+</div>
+          <div class="stat-label">Years of experience</div>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <div class="stat-num">7+</div>
+          <div class="stat-label">Products shipped</div>
+        </div>
+        <div class="reveal reveal-delay-3">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Coffee consumed</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">02</span>
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">About</span>
+      </div>
+
+      <div class="marquee-wrap">
+        <div class="marquee-track">
+          <div class="marquee-item">Software Engineer <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Android &amp; iOS Dev <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Founder <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Web Apps <span class="marquee-dot"></span></div>
+          <div class="marquee-item">AI Tools <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Desktop Apps <span class="marquee-dot"></span></div>
+          <!-- duplicate for seamless loop -->
+          <div class="marquee-item">Software Engineer <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Android &amp; iOS Dev <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Founder <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Web Apps <span class="marquee-dot"></span></div>
+          <div class="marquee-item">AI Tools <span class="marquee-dot"></span></div>
+          <div class="marquee-item">Desktop Apps <span class="marquee-dot"></span></div>
+        </div>
+      </div>
+
+      <div class="about-layout">
+        <div class="reveal">
+          <p class="about-big-text">
+            I obsess over the details that separate software that works from software that feels right.
+          </p>
+          <p class="about-body">
+            My journey has taken me through startup chaos and corporate scale — each shaping how I approach building. I've shipped mobile apps with tens of thousands of users, architected web platforms from scratch, and now I'm building tools that make other engineers faster.
+          </p>
+          <p class="about-body">
+            When I'm not shipping, I'm thinking about developer experience, AI-assisted workflows, and how to remove the unnecessary from any system.
+          </p>
+        </div>
+
+        <div class="about-right reveal reveal-delay-2">
+          <p style="font-size:12px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; font-weight: 400;">What I work with</p>
+          <div class="about-tag-row">
+            <span class="about-tag">Android</span>
+            <span class="about-tag">iOS</span>
+            <span class="about-tag">React</span>
+            <span class="about-tag">Node.js</span>
+            <span class="about-tag">TypeScript</span>
+            <span class="about-tag">Python</span>
+            <span class="about-tag">Swift</span>
+            <span class="about-tag">Kotlin</span>
+            <span class="about-tag">Firebase</span>
+            <span class="about-tag">AWS</span>
+            <span class="about-tag">AI / LLMs</span>
+            <span class="about-tag">REST APIs</span>
+            <span class="about-tag">SQL</span>
+          </div>
+
+          <div style="height: 1px; background: var(--border); margin: 32px 0;"></div>
+
+          <p style="font-size: 12px; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; font-weight: 400;">Background</p>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+              <span style="color: var(--text-mid); font-weight: 300;">Startup experience</span>
+              <span style="color: var(--text-muted); font-weight: 300;">✓</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+              <span style="color: var(--text-mid); font-weight: 300;">MNC experience</span>
+              <span style="color: var(--text-muted); font-weight: 300;">✓</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+              <span style="color: var(--text-mid); font-weight: 300;">Founder &amp; Director</span>
+              <span style="color: var(--text-muted); font-weight: 300;">✓</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+              <span style="color: var(--text-mid); font-weight: 300;">Mobile + Web + Desktop</span>
+              <span style="color: var(--text-muted); font-weight: 300;">✓</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section class="section" id="experience">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">03</span>
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">Experience</span>
+      </div>
+      <h2 class="section-title reveal">Where I've worked.</h2>
+      <p class="section-sub reveal reveal-delay-1">2+ years across founding, enterprise, and freelance — each shaping how I build.</p>
+
+      <div class="exp-list">
+
+        <div class="exp-item reveal">
+          <div class="exp-meta">
+            <p class="exp-period">Sep 2025 — Jan 2026</p>
+            <p class="exp-type">Founder</p>
+          </div>
+          <div>
+            <p class="exp-role">Founder &amp; Full-Stack Engineer</p>
+            <p class="exp-company">Qodebench Technologies · Haryana, India</p>
+            <p class="exp-desc">
+              Founded and architected an AI-powered developer learning and evaluation platform focused on production-style engineering challenges. Defined product roadmap, technical architecture, and scalable system design. Built interactive code evaluation features, AI-assisted feedback workflows, and led the complete lifecycle — UI/UX, engineering, deployment, and growth strategy.
+            </p>
+          </div>
+        </div>
+
+        <div class="exp-item reveal reveal-delay-1">
+          <div class="exp-meta">
+            <p class="exp-period">May 2024 — Sep 2025</p>
+            <p class="exp-type">Full-time · Remote</p>
+          </div>
+          <div>
+            <p class="exp-role">Frontend Engineer (Acting Senior Frontend)</p>
+            <p class="exp-company">UMENIT Solutions LLP</p>
+            <p class="exp-desc">
+              Led frontend development for AIOH — an enterprise HR &amp; wellbeing platform — using Next.js, Azure DevOps, Docker, and CI/CD pipelines. Built health tracking, wellness dashboards, and compliance modules. Also developed an interactive org-chart visualization tool and SharePoint-based modules for U.S. Government procurement workflows using SPFx.
+            </p>
+          </div>
+        </div>
+
+        <div class="exp-item reveal reveal-delay-2">
+          <div class="exp-meta">
+            <p class="exp-period">Dec 2023 — Apr 2024</p>
+            <p class="exp-type">Freelance · Remote</p>
+          </div>
+          <div>
+            <p class="exp-role">Software Development Engineer</p>
+            <p class="exp-company">Cimpress Technologies India &amp; Independent Clients</p>
+            <p class="exp-desc">
+              Delivered full-stack projects end-to-end for clients including JourneyToAutomation.org — a MERN-stack educational platform with scalable MongoDB backend, dynamic blog/video modules, and Git-based CI/CD via Vercel. Handled everything from architecture to deployment independently.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section" id="projects">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">04</span>
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">Projects</span>
+      </div>
+      <h2 class="section-title reveal">Things I've built.</h2>
+      <p class="section-sub reveal reveal-delay-1">
+        A selection of products — some live, some in the making. All on
+        <a href="https://github.com/ujjwal1629" target="_blank" rel="noopener" style="color: var(--text); border-bottom: 1px solid var(--border-dark);">GitHub</a>.
+      </p>
+
+      <div class="projects-list">
+
+        <a href="https://www.qodebench.com" target="_blank" rel="noopener" class="project-item reveal">
+          <span class="project-num">01</span>
+          <div class="project-body">
+            <p class="project-name">Qodebench</p>
+            <p class="project-desc">AI-powered QA onboarding platform. Cuts knowledge-transfer time by delivering contextual challenges and role-specific AI lessons to engineers joining a new team.</p>
+            <div class="project-tags">
+              <span class="ptag">AI</span>
+              <span class="ptag">SaaS</span>
+              <span class="ptag">QA</span>
+              <span class="ptag">Web</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://play.google.com/store/apps/details?id=com.myworkplace.aioh" target="_blank" rel="noopener" class="project-item reveal reveal-delay-1">
+          <span class="project-num">02</span>
+          <div class="project-body">
+            <p class="project-name">AIOH MyWorkplace</p>
+            <p class="project-desc">Android &amp; iOS app for employee mental wellness and workplace engagement. Features survey creation, mood tracking, health journeys, and team rituals. Built with Next.js, CI/CD via Azure DevOps. Available on the Play Store.</p>
+            <div class="project-tags">
+              <span class="ptag">Android</span>
+              <span class="ptag">iOS</span>
+              <span class="ptag">Next.js</span>
+              <span class="ptag">Wellness</span>
+              <span class="ptag">Enterprise</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://www.aioh.io/" target="_blank" rel="noopener" class="project-item reveal reveal-delay-2">
+          <span class="project-num">03</span>
+          <div class="project-body">
+            <p class="project-name">AIOH Platform</p>
+            <p class="project-desc">Disease-agnostic digital health platform delivering virtual healthcare journeys for organisations of any size. Supports workplace health, rehabilitation, preventive care, and 8+ other solution areas. SOC 2 Type II, GDPR &amp; HIPAA aligned. Rated 5.0★ across 200+ reviews.</p>
+            <div class="project-tags">
+              <span class="ptag">Digital Health</span>
+              <span class="ptag">SaaS</span>
+              <span class="ptag">AI Chatbot</span>
+              <span class="ptag">Multi-Tenant</span>
+              <span class="ptag">Web</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://www.joggliders.com" target="_blank" rel="noopener" class="project-item reveal reveal-delay-3">
+          <span class="project-num">04</span>
+          <div class="project-body">
+            <p class="project-name">JogGlider</p>
+            <p class="project-desc">Visa partner web platform. Users explore countries, visa types, PR pathways, and eligibility — then book consultations directly through the site.</p>
+            <div class="project-tags">
+              <span class="ptag">Web</span>
+              <span class="ptag">Visa</span>
+              <span class="ptag">Immigration</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://www.journeytoautomation.org/" target="_blank" rel="noopener" class="project-item reveal reveal-delay-4">
+          <span class="project-num">05</span>
+          <div class="project-body">
+            <p class="project-name">JourneytoAutomation</p>
+            <p class="project-desc">Portfolio and course platform built for a QA tutor. Students browse curriculum, enroll in QA courses, and track their learning progress end-to-end.</p>
+            <div class="project-tags">
+              <span class="ptag">Web</span>
+              <span class="ptag">EdTech</span>
+              <span class="ptag">QA</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/ujjwal1629" target="_blank" rel="noopener" class="project-item reveal reveal-delay-5">
+          <span class="project-num">06</span>
+          <div class="project-body">
+            <p class="project-name">Refiner</p>
+            <p class="project-desc">Desktop app for Mac &amp; Windows. Captures voice, transcribes it, then refines the text into token-efficient prompts — so vibe-coding sessions start with clarity, not noise.</p>
+            <div class="project-tags">
+              <span class="ptag">Desktop</span>
+              <span class="ptag">AI</span>
+              <span class="ptag">Voice</span>
+              <span class="ptag">Prompting</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-dev">In Dev</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+        <a href="https://github.com/Ujjwal1629/Anti-Nepotism" target="_blank" rel="noopener" class="project-item reveal reveal-delay-5">
+          <span class="project-num">07</span>
+          <div class="project-body">
+            <p class="project-name">Anti Nepotism</p>
+            <p class="project-desc">Procurement management system designed to bring transparency and fairness to internal vendor selection, approvals, and supply chain workflows.</p>
+            <div class="project-tags">
+              <span class="ptag">Web</span>
+              <span class="ptag">Procurement</span>
+              <span class="ptag">Enterprise</span>
+            </div>
+          </div>
+          <div class="project-right">
+            <span class="project-status status-live">Live</span>
+            <span class="project-arrow">↗</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="section-eyebrow reveal">
+        <span class="eyebrow-num">05</span>
+        <span class="eyebrow-line"></span>
+        <span class="eyebrow-text">Contact</span>
+      </div>
+
+      <div class="contact-layout">
+        <div class="reveal">
+          <h2 class="contact-big">Let's build something.</h2>
+          <p class="contact-sub">
+            Have an idea, a problem to solve, or just want to talk about what
+            we could build together? My inbox is always open.
+          </p>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+            <a href="mailto:ujjwalsingh1629@gmail.com" class="contact-cta">
+              Say hello
+              <span>→</span>
+            </a>
+            <a href="Ujjwal_Singh_Resume%20(1).pdf" download="Ujjwal_Singh_Resume.pdf" class="contact-cta" style="background:var(--white); color:var(--text); border:1px solid var(--border); gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Resume
+            </a>
+            <a href="Ujjwal_Singh_Resume%20(1).pdf" target="_blank" rel="noopener" class="contact-cta" style="background:var(--white); color:var(--text); border:1px solid var(--border); gap:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              View Resume
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-links-col reveal reveal-delay-2">
+          <a href="mailto:ujjwalsingh1629@gmail.com" class="contact-link-row">
+            <div>
+              <p class="contact-link-label">Email</p>
+              <p class="contact-link-sub">ujjwalsingh1629@gmail.com</p>
+            </div>
+            <span class="contact-arrow">↗</span>
+          </a>
+          <a href="tel:+919871462694" class="contact-link-row">
+            <div>
+              <p class="contact-link-label">Phone</p>
+              <p class="contact-link-sub">+91 98714 62694</p>
+            </div>
+            <span class="contact-arrow">↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/ujjwal-singh-71b908278/" target="_blank" rel="noopener" class="contact-link-row">
+            <div>
+              <p class="contact-link-label">LinkedIn</p>
+              <p class="contact-link-sub">linkedin.com/in/ujjwal-singh</p>
+            </div>
+            <span class="contact-arrow">↗</span>
+          </a>
+          <a href="https://github.com/ujjwal1629" target="_blank" rel="noopener" class="contact-link-row">
+            <div>
+              <p class="contact-link-label">GitHub</p>
+              <p class="contact-link-sub">github.com/ujjwal1629</p>
+            </div>
+            <span class="contact-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-left">© 2026 Ujjwal Singh. All rights reserved.</p>
+      <p class="footer-right">DESIGNED &amp; BUILT BY UJJWAL</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ── Smooth scroll for nav links ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ── Active nav on scroll ──
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item[data-section]');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-40% 0px -40% 0px',
+    threshold: 0
+  };
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.dataset.section === id);
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(s => sectionObserver.observe(s));
+
+  // ── Scroll reveal ──
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // ── Stretch / skew on scroll ──
+  // Project items get a subtle vertical stretch as you scroll past them
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  let lastScrollY = window.scrollY;
+  let currentSkew = 0;
+  let targetSkew = 0;
+
+  const stretchTarget = document.querySelector('.projects-list');
+  const heroName = document.querySelector('.hero-name');
+
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const delta = scrollY - lastScrollY;
+    lastScrollY = scrollY;
+
+    // Skew the project list slightly on fast scroll
+    targetSkew = Math.min(Math.max(delta * -0.04, -2), 2);
+  }
+
+  function animateStretch() {
+    currentSkew = lerp(currentSkew, targetSkew, 0.08);
+    targetSkew = lerp(targetSkew, 0, 0.12);
+
+    if (stretchTarget) {
+      stretchTarget.style.transform = `skewY(${currentSkew}deg)`;
+    }
+
+    requestAnimationFrame(animateStretch);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  animateStretch();
+
+  // ── Parallax on hero name ──
+  const mainScroll = document.getElementById('main-scroll');
+
+  function heroParallax() {
+    const scrolled = window.scrollY;
+    if (heroName && scrolled < window.innerHeight) {
+      heroName.style.transform = `translateY(${scrolled * 0.18}px)`;
+    }
+  }
+
+  window.addEventListener('scroll', heroParallax, { passive: true });
+</script>
+
+</body>
+</html>
